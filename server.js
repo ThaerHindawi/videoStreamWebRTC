@@ -67,6 +67,7 @@ app.post("/consumer", async ({ body }, res) => {
     const desc = new webrtc.RTCSessionDescription(body.sdp);
     await peer.setRemoteDescription(desc);
     senderStream[body.roomId].getTracks().forEach(track => peer.addTrack(track, senderStream[body.roomId]));
+    console.log(senderStream[body.roomId].getTracks());
     const answer = await peer.createAnswer();
     await peer.setLocalDescription(answer);
     const payload = {
@@ -76,5 +77,10 @@ app.post("/consumer", async ({ body }, res) => {
     res.json(payload);
 });
 
+app.get('/clear', (req, res) => {
+    senderStream = {};
+    res.redirect('/');
+    console.log(senderStream);
+});
 
 server.listen(5000, () => console.log('server started'));
